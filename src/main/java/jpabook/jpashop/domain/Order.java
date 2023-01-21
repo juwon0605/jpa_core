@@ -1,9 +1,12 @@
 package jpabook.jpashop.domain;
 
+import static javax.persistence.FetchType.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -30,14 +33,17 @@ public class Order {
 	@Column(name = "order_id")
 	private Long id;
 
-	@ManyToOne
+	@ManyToOne(fetch = LAZY) //default가 EAGER
 	@JoinColumn(name = "member_id")
 	private Member member;
 
-	@OneToMany(mappedBy = "order")
+	//JPQL select o From order o; -> SQL select * from order (order를 조회할 때 멤버를 중복 조회하면 n+1 문제!)
+
+	@OneToMany(mappedBy = "order", // default가 LAZY
+		cascade = CascadeType.ALL) // 관련된 update(persist) 전파
 	private List<OrderItem> orderItems = new ArrayList<>();
 
-	@OneToOne
+	@OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "delivery_id")
 	private Delivery delivery;
 
@@ -45,5 +51,24 @@ public class Order {
 
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status; //주문상태 [ORDER, CANCEL]
+
+	//==연관관계 편의 메서드==//
+	//DB에서는 연관관계 주인 기준으로 단방향 매핑되지만, 어플리케이션에서 논리적으로 양방향 연관관계 매핑해기 위해 정의
+	//항상 직접 비즈니스 로직에서 매핑해주기보다 Entity에서 정의
+	//두 연관관계 중 자주 조회하는 기준으로 정의
+	public void setMember(Member member) {
+		this.member = member;
+		member.getOrders().add(this);
+	}
+
+	public void addOrderItem(OrderItem orderItem) {
+		orderItems.add(orderItem);
+		orderItem.setOrder(this);
+	}
+
+	public void setDelivery(Delivery delivery) {
+		this.delivery = delivery;
+		delivery.setOrder(this);
+	}
 }
 

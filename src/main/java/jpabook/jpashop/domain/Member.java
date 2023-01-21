@@ -29,6 +29,6 @@ public class Member {
 	private Address address;
 
 	@OneToMany(mappedBy = "member")
-	private List<Order> orders = new ArrayList<>();
+	private List<Order> orders = new ArrayList<>(); // 하이버네이트가 다른 컬렉션으로 관리해서 따로 초기화하면 안 좋음.
 
 }
