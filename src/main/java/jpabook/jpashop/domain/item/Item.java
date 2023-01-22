@@ -22,7 +22,7 @@ import lombok.Setter;
 @DiscriminatorColumn(name = "dtype")
 @Getter
 @Setter
-public abstract class Item {
+public class Item {
 
 	@Id
 	@GeneratedValue
