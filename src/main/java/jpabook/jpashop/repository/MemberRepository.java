@@ -3,17 +3,19 @@ package jpabook.jpashop.repository;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
 
 import jpabook.jpashop.domain.Member;
+import lombok.RequiredArgsConstructor;
 
 @Repository
+@RequiredArgsConstructor
 public class MemberRepository {
 
-	@PersistenceContext
-	private EntityManager em;
+	//Spring Data JPA가 @PersistenceContext를 통한 의존성 주입외에 @Autowired도 지원
+	//final과 롬복의 @RequiredArgsConstructor을 통해 의존성 주입
+	private final EntityManager em;
 
 	public void save(Member member) {
 		em.persist(member);
