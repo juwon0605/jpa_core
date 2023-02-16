@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,6 +30,7 @@ public class Member {
 	@Embedded
 	private Address address;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "member")
 	private List<Order> orders = new ArrayList<>(); // 하이버네이트가 다른 컬렉션으로 관리해서 따로 초기화하면 안 좋음.
 
