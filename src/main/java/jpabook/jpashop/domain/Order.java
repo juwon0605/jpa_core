@@ -47,6 +47,7 @@ public class Order {
 		cascade = CascadeType.ALL) // 관련된 update(persist) 전파
 	private List<OrderItem> orderItems = new ArrayList<>();
 
+	//TODO cascade 없으면 왜 에러나는지 다시 확인하기
 	@OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "delivery_id")
 	private Delivery delivery;
