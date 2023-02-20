@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jpabook.jpashop.domain.Address;
@@ -43,6 +44,16 @@ public class OrderApiController {
 	@GetMapping("/api/v3/orders")
 	public List<OrderDto> ordersV3() {
 		return orderRepository.findAllWithItem().stream()
+			.map(OrderDto::new)
+			.collect(Collectors.toList());
+	}
+
+	@GetMapping("/api/v3.1/orders")
+	public List<OrderDto> ordersV3_page(
+		@RequestParam(value = "offset", defaultValue = "0") int offset,
+		@RequestParam(value = "limit", defaultValue = "100") int limit
+	) {
+		return orderRepository.findAllWithMemberDelivery(offset, limit).stream()
 			.map(OrderDto::new)
 			.collect(Collectors.toList());
 	}
