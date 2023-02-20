@@ -40,6 +40,13 @@ public class OrderApiController {
 			.collect(Collectors.toList());
 	}
 
+	@GetMapping("/api/v3/orders")
+	public List<OrderDto> ordersV3() {
+		return orderRepository.findAllWithItem().stream()
+			.map(OrderDto::new)
+			.collect(Collectors.toList());
+	}
+
 	@Getter
 	static class OrderDto {
 
@@ -65,6 +72,7 @@ public class OrderApiController {
 
 	@Getter
 	static class OrderItemDto {
+
 		private String itemName;
 		private int orderPrice;
 		private int count;
@@ -74,7 +82,5 @@ public class OrderApiController {
 			orderPrice = orderItem.getOrderPrice();
 			count = orderItem.getCount();
 		}
-
 	}
-
 }
